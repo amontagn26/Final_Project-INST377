@@ -2,46 +2,36 @@ let ratingChart = null;
 
 async function loadshow() {
   const query = document.getElementById('show').value;
-
   try {
-    // First fetch - search for show
-    const searchRes = await fetch(`https://api.tvmaze.com/search/shows?q=${query}`);
+    const searchRes = await fetch(`/shows/search?q=${encodeURIComponent(query)}`);
     const searchData = await searchRes.json();
-
-    if (searchData.length === 0) {
-      document.getElementById('showinfo').innerHTML = 'No results found';
+    if (!searchRes.ok) {
+      document.getElementById('showinfo').innerHTML = searchData.message;
       return;
     }
+    const showId = searchData.id;
 
-    const show = searchData[0].show;
-    const showId = show.id;
-    document.getElementById('showid').innerHTML = showId;
-
-    // Second fetch - get show details with episodes
-    const showRes = await fetch(`https://api.tvmaze.com/shows/${showId}?embed=episodes`);
+    const showRes = await fetch(`/shows/${showId}`);
     const showData = await showRes.json();
 
     const title = showData.name;
-    const avg_rating = showData.rating.average ?? "N/A";
-    const episodes = showData._embedded.episodes;
+    const avg_rating = showData.rating ?? "N/A";   // backend already extracted this
+    const episodes = showData.episodes;             // backend already extracted this
+    const ratedEpisodes = showData.ratedEpisodes;  // backend already filtered this
 
     let html = `Show Name: ${title} - Rating: ${avg_rating}<br><br>`;
     html += `<b>Episodes:</b><br>`;
-    episodes.slice(0, 10).forEach(ep => {
+    episodes.forEach(ep => {
       html += `S${ep.season}E${ep.number}: ${ep.name}<br>`;
     });
     document.getElementById('showinfo').innerHTML = html;
 
-    // Filter episodes that have a rating
-    const ratedEpisodes = episodes.filter(ep => ep.rating?.average !== null);
-    const labels = ratedEpisodes.map(ep => `S${ep.season}E${ep.number}`);
-    const ratings = ratedEpisodes.map(ep => ep.rating.average);
+    const labels = ratedEpisodes.map(ep => ep.label);
+    const ratings = ratedEpisodes.map(ep => ep.rating);
 
-    // Destroy previous chart if it exists
     if (ratingChart) {
       ratingChart.destroy();
     }
-
     const ctx = document.getElementById('ratingChart').getContext('2d');
     ratingChart = new Chart(ctx, {
       type: 'line',
@@ -60,39 +50,25 @@ async function loadshow() {
       },
       options: {
         scales: {
-          y: {
-            min: 0,
-            max: 10,
-            title: { display: true, text: 'Rating' }
-          },
-          x: {
-            title: { display: true, text: 'Episode' },
-            ticks: { maxTicksLimit: 20 }
-          }
+          y: { min: 0, max: 10, title: { display: true, text: 'Rating' } },
+          x: { title: { display: true, text: 'Episode' }, ticks: { maxTicksLimit: 20 } }
         }
       }
     });
-
   } catch (err) {
     console.error(err);
     document.getElementById('showinfo').innerHTML = "Error loading show.";
   }
 }
+
 function loadlist() {
-  fetch('https://api.tvmaze.com/shows')
+  fetch('/shows/top')
     .then(res => res.json())
     .then(data => {
       const showList = document.getElementById('showlist');
-
-      const topShows = data
-        .filter(show => show.rating.average !== null) // remove unrated
-        .sort((a, b) => b.rating.average - a.rating.average) // highest first
-        .slice(0, 25);
-
-      const content = topShows.map(show => {
-        return `Show Name: ${show.name} - Rating: ${show.rating.average}`;
+      const content = data.map(show => {
+        return `Show Name: ${show.name} - Rating: ${show.rating}`;  // backend already sorted/filtered
       }).join('<br>');
-
       showList.innerHTML = content;
     })
     .catch(err => {

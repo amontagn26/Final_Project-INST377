@@ -1,17 +1,17 @@
 {
-  "name": "inst377-week13-sampleapp-fa26",
+  "name": "final-project",
   "version": "1.0.0",
-  "description": "INST377 - Week 13 Sample App",
-  "homepage": "https://github.com/anmoldash98/inst377-week13-sampleapp-fa26#readme",
+  "description": "TV Show Analysis Project",
+  "homepage": "https://github.com/amontagn26/Final_Project-INST377#inst377-week13-sampleapp-fa26",
   "bugs": {
-    "url": "https://github.com/anmoldash98/inst377-week13-sampleapp-fa26/issues"
+    "url": "https://github.com/amontagn26/Final_Project-INST377/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/anmoldash98/inst377-week13-sampleapp-fa26.git"
   },
   "license": "ISC",
-  "author": "Anmol Dash",
+  "author": "Angelo Montagnino",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {

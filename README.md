@@ -1,2 +1,6 @@
-# inst377-week13-sampleapp-fa26
-Week 13 - Sample Vercel app for INST377
+# README
+## TV Show Analysis Project
+### Project Description
+### Description of Target Browsers
+### Developer Manual
+

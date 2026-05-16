@@ -16,7 +16,6 @@ app.get('/', (req, res) => {
   res.sendFile('public/project-page.html', { root: __dirname });
 });
 
-// GET /shows/top - fetch top-rated shows (used on page load)
 app.get('/shows/top', async (req, res) => {
   console.log('Fetching top-rated shows from TVMaze');
   try {
@@ -47,7 +46,7 @@ app.get('/shows/top', async (req, res) => {
   }
 });
 
-// GET /shows/search?q=query - search for a show by name
+
 app.get('/shows/search', async (req, res) => {
   const query = req.query.q;
   console.log(`Searching for show: ${query}`);
@@ -67,7 +66,7 @@ app.get('/shows/search', async (req, res) => {
       res.statusCode = 404;
       return res.json({ message: `No results found for "${query}"` });
     }
-    // Return the top match's id so the client can call /shows/:id
+    
     const topMatch = data[0].show;
     console.log(`Top match: ${topMatch.name} (id: ${topMatch.id})`);
     res.json({ id: topMatch.id, name: topMatch.name });
@@ -78,7 +77,7 @@ app.get('/shows/search', async (req, res) => {
   }
 });
 
-// GET /shows/:id - fetch full show details including episodes
+
 app.get('/shows/:id', async (req, res) => {
   const showId = req.params.id;
   console.log(`Fetching show details for id: ${showId}`);

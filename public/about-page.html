@@ -4,15 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link type="stylesheet" href="final-project.css">
+    <link rel="stylesheet" href="final-project.css">
     <script src="final-project.js"></script>
 </head>
 <body>
-    <h1 id="heading">About</h1>
-  <nav>
+  <h1 id="heading">About</h1>
+  <nav class="nav">
     <a href="home-page.html">Home</a>
     <a href="about-page.html">About</a>
     <a href="project-page.html">Project</a>
   </nav>
+  <div class="app-description">
+    <h2>What this app does:</h2>
+    <p>This application is an analysis tool to search and track your favorite 
+      TV shows. The app has two key functions both located on the Project Page.
+      The first function allows users to search any TV show to learn information
+      on the show and chart the average IMBD rating of each of the show's episodes.
+      The second function allows users to favorite the searched show to add to a
+       favorite shows table. 
+    </p>
+  </div>
+  <div class="data-source-info">
+    <h2>Data Sources</h2>
+    <ul>
+      <li>TV Maze - API that provides live TV show data</li>
+      <li>Supabase - Cloud database to store and recieve favorite shows</li>
+    </ul>
+  </div>
+  <div class="how-to-use">
+    <h2>How to Use:</h2>
+    <ol>
+      <li>Navigate to Project Page</li>
+      <li>Input show name in search bar</li>
+      <li>Click favorites button</li>
+    </ol>
+  </div>
+  <div class="development-info">
+    <h2>Development Background:</h2>
+    <p> This app was created to provide users with a simple way to search for 
+      TV shows, explore episode ratings and save their favorite shows for others 
+      to see.
+    </p>
+  </div>
 </body>
 </html>

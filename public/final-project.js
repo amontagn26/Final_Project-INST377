@@ -7,7 +7,7 @@ async function loadshow() {
     const searchRes = await fetch(`/shows/search?q=${encodeURIComponent(query)}`);
     const searchData = await searchRes.json();
     if (!searchRes.ok) {
-      document.getElementById('showinfo').innerHTML = searchData.message;
+      document.getElementById('show-info').innerHTML = searchData.message;
       return;
     }
     const showId = searchData.id;
@@ -32,7 +32,7 @@ async function loadshow() {
       <b>Description:</b><br>${description}
 `     ;
 
-    document.getElementById('showinfo').innerHTML = html;
+    document.getElementById('show-info').innerHTML = html;
 
     const labels = ratedEpisodes.map(ep => ep.label);
     const ratings = ratedEpisodes.map(ep => ep.rating);
@@ -42,12 +42,12 @@ async function loadshow() {
       show_name: showData.name,
       rating: showData.rating
     };
-    document.getElementById('fav-btn').style.display = 'block';
+    document.getElementById('fav-button').style.display = 'block';
 
     if (ratingChart) {
       ratingChart.destroy();
     }
-    const ctx = document.getElementById('ratingChart').getContext('2d');
+    const ctx = document.getElementById('rating-chart').getContext('2d');
     ratingChart = new Chart(ctx, {
       type: 'line',
       data: {
@@ -71,7 +71,7 @@ async function loadshow() {
       }
     });
   } catch (err) {
-    document.getElementById('showinfo').innerHTML = "Error loading show.";
+    document.getElementById('show-info').innerHTML = "Error loading show.";
   }
 }
 
@@ -104,10 +104,10 @@ function loadFavorites() {
         console.error('Unexpected response:', data);
         return;
       }
-      if ($.fn.DataTable.isDataTable('#favoriteslist')) {
-        $('#favoriteslist').DataTable().destroy();
+      if ($.fn.DataTable.isDataTable('#favorites-list')) {
+        $('#favorites-list').DataTable().destroy();
       }
-      $('#favoriteslist').DataTable({
+      $('#favorites-list').DataTable({
         data: data.map(show => [show.show_name, show.rating ?? 'N/A']),
         columns: [{ title: 'Name' }, { title: 'Rating' }]
       });

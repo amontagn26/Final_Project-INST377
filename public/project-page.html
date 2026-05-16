@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link type="stylesheet" href="final-project.css">
+    <link rel="stylesheet" href="final-project.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="final-project.js"></script>
 </head>
 <body>
     <h1 id="heading">Project</h1>
@@ -20,9 +22,20 @@
         <input id="show" type="text" required><br><br>
         <button id="searchbutton" type="submit">Search</button>
     </form>
+    <button id="fav-btn" style="display:none" onclick="addFavorite()">Add to Favorites</button>
     <canvas id="ratingChart" width="800" height="400"></canvas>
-    <p id = 'showid'></p>
     <h3 id="showinfo"></h3>
-    <p id="showlist"></p>
+    
+<h2>My Favorites</h2>
+    <table id="favoriteslist">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+ <script src="final-project.js"></script>
 </body>
 </html>

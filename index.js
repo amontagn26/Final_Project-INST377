@@ -1,14 +1,19 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
+const supabaseClient = require('@supabase/supabase-js');
 
 const app = express();
 const port = 3000;
 
 dotenv.config();
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static(__dirname + '/public'));
+
+const supabase = supabaseClient.createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
 
 const TVMAZE_BASE = 'https://api.tvmaze.com';
 
@@ -16,85 +21,32 @@ app.get('/', (req, res) => {
   res.sendFile('public/project-page.html', { root: __dirname });
 });
 
-app.get('/shows/top', async (req, res) => {
-  console.log('Fetching top-rated shows from TVMaze');
-  try {
-    const response = await fetch(`${TVMAZE_BASE}/shows`);
-    if (!response.ok) {
-      console.log(`TVMaze error: ${response.status}`);
-      res.statusCode = 502;
-      return res.json({ message: 'Failed to fetch shows from TVMaze' });
-    }
-    const data = await response.json();
-    const topShows = data
-      .filter(show => show.rating.average !== null)
-      .sort((a, b) => b.rating.average - a.rating.average)
-      .slice(0, 25)
-      .map(show => ({
-        id: show.id,
-        name: show.name,
-        rating: show.rating.average,
-        genres: show.genres,
-        image: show.image?.medium ?? null,
-      }));
-    console.log(`Returning ${topShows.length} top-rated shows`);
-    res.json(topShows);
-  } catch (err) {
-    console.log(`Error: ${err}`);
-    res.statusCode = 500;
-    res.json({ message: 'Internal server error' });
-  }
-});
-
-
 app.get('/shows/search', async (req, res) => {
   const query = req.query.q;
-  console.log(`Searching for show: ${query}`);
   if (!query || query.trim() === '') {
-    res.statusCode = 400;
-    return res.json({ message: 'Query parameter "q" is required' });
+    return res.status(400).json({ message: 'Query parameter "q" is required' });
   }
   try {
     const response = await fetch(`${TVMAZE_BASE}/search/shows?q=${encodeURIComponent(query)}`);
-    if (!response.ok) {
-      console.log(`TVMaze error: ${response.status}`);
-      res.statusCode = 502;
-      return res.json({ message: 'Failed to search TVMaze' });
-    }
+    if (!response.ok) return res.status(502).json({ message: 'Failed to search TVMaze' });
     const data = await response.json();
-    if (data.length === 0) {
-      res.statusCode = 404;
-      return res.json({ message: `No results found for "${query}"` });
-    }
-    
+    if (data.length === 0) return res.status(404).json({ message: `No results found for "${query}"` });
     const topMatch = data[0].show;
     console.log(`Top match: ${topMatch.name} (id: ${topMatch.id})`);
     res.json({ id: topMatch.id, name: topMatch.name });
   } catch (err) {
-    console.log(`Error: ${err}`);
-    res.statusCode = 500;
-    res.json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-
 app.get('/shows/:id', async (req, res) => {
   const showId = req.params.id;
-  console.log(`Fetching show details for id: ${showId}`);
-  if (isNaN(showId)) {
-    res.statusCode = 400;
-    return res.json({ message: 'Show ID must be a number' });
-  }
+  if (isNaN(showId)) return res.status(400).json({ message: 'Show ID must be a number' });
   try {
     const response = await fetch(`${TVMAZE_BASE}/shows/${showId}?embed=episodes`);
     if (!response.ok) {
-      if (response.status === 404) {
-        res.statusCode = 404;
-        return res.json({ message: `Show with id ${showId} not found` });
-      }
-      console.log(`TVMaze error: ${response.status}`);
-      res.statusCode = 502;
-      return res.json({ message: 'Failed to fetch show from TVMaze' });
+      if (response.status === 404) return res.status(404).json({ message: `Show with id ${showId} not found` });
+      return res.status(502).json({ message: 'Failed to fetch show from TVMaze' });
     }
     const showData = await response.json();
     const episodes = showData._embedded.episodes;
@@ -107,25 +59,39 @@ app.get('/shows/:id', async (req, res) => {
         rating: ep.rating.average,
         label: `S${ep.season}E${ep.number}`,
       }));
-    const result = {
+    console.log(`Returning details for: ${showData.name}`);
+    res.json({
       id: showData.id,
       name: showData.name,
       rating: showData.rating.average ?? 'N/A',
-      episodes: episodes.slice(0, 10).map(ep => ({
-        season: ep.season,
-        number: ep.number,
-        name: ep.name,
-        label: `S${ep.season}E${ep.number}`,
-      })),
+      genres: showData.genres.join(', ') || 'N/A',
+      description: showData.summary?.replace(/<[^>]*>/g, '') ?? 'No description available',
+      topEpisode: ratedEpisodes.reduce((a, b) => a.rating > b.rating ? a : b, ratedEpisodes[0]),
+      worstEpisode: ratedEpisodes.reduce((a, b) => a.rating < b.rating ? a : b, ratedEpisodes[0]),
       ratedEpisodes,
-    };
-    console.log(`Returning details for: ${result.name}`);
-    res.json(result);
+    });
   } catch (err) {
-    console.log(`Error: ${err}`);
-    res.statusCode = 500;
-    res.json({ message: 'Internal server error' });
+    res.status(500).json({ message: 'Internal server error' });
   }
+});
+
+app.get('/favorites', async (req, res) => {
+  const { data, error } = await supabase.from('favorites').select();
+  if (error) return res.status(500).send(error);
+  console.log(`Received ${data.length} favorites`);
+  res.json(data);
+});
+
+app.post('/favorites', async (req, res) => {
+  const { show_id, show_name, rating } = req.body;
+  if (!show_id || !show_name) return res.status(400).json({ message: 'show_id and show_name are required' });
+  const { data, error } = await supabase
+    .from('favorites')
+    .insert({ show_id, show_name, rating })
+    .select();
+  if (error) return res.status(500).send(error);
+  console.log(`Added to favorites: ${show_name}`);
+  res.json(data);
 });
 
 app.listen(port, () => {

@@ -30,15 +30,20 @@ Ensure the following is installed on your device:
 - A Supabase account with a project set up
 ### Steps
 1) Clone the Repository
+
 git clone https://github.com/amontagn26/Final_Project-INST377.git
+
 cd Final_Project-INST377
 2) Install Dependencies
+
 npm install
 3) Create .env file in the root directory with Supabase credentials :
+
 SUPABASE_URL=https://your-project-id.supabase.co
+
 SUPABASE_KEY=your_service_role_key
-4) Set up Supabase database by creating a *favorites* table with the following
-columns:
+4) Set up the Supabase database by creating a `favorites` table with the following columns:
+
 | Column | Type |
 |--------|------|
 | id | int8 (auto increment, primary key) |
@@ -46,7 +51,7 @@ columns:
 | show_name | text |
 | rating | float4 |
 
-IMPORTANT: Ensure RLS(Row Level Security) is disabled on the *favorites* table.
+IMPORTANT: Ensure RLS(Row Level Security) is disabled on the `favorites` table.
 ## How to Run
 Run the application in terminal with :
 

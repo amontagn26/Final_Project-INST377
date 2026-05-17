@@ -39,11 +39,12 @@ SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_KEY=your_service_role_key
 4) Set up Supabase database by creating a *favorites* table with the following
 columns:
-
-id | int8
-show_id | int8
-show_name | text
-rating | float
+| Column | Type |
+|--------|------|
+| id | int8 (auto increment, primary key) |
+| show_id | int8 |
+| show_name | text |
+| rating | float4 |
 
 IMPORTANT: Ensure RLS(Row Level Security) is disabled on the *favorites* table.
 ## How to Run
@@ -64,7 +65,7 @@ There are no automatted tests currently written for the application. Users must
 Serves the main project-page.html
 ### GET/shows/search?q={query}
 Searches TVMaze for a show by name and returns the top match
-#### Response
+#### *Response*
 {
   "id": 169,
   "name": "Breaking Bad"
@@ -72,7 +73,7 @@ Searches TVMaze for a show by name and returns the top match
 ### GET/shows/:id
 Fetches full details for show by its TVMaze ID (Episode ratings, top episode, 
 worst episode, description)
-#### Response
+#### *Response*
 {
   "id": 169,
   "name": "Breaking Bad",
@@ -85,7 +86,7 @@ worst episode, description)
 }
 ### GET/favorites
 Retrives all saved favorite shows from Supabase database
-#### Response
+#### *Response*
 [
   {
     "id": 1,
@@ -102,7 +103,7 @@ Saves a show to the Supabase database
   "show_name": "Breaking Bad",
   "rating": 9.2
 }
-#### Response :
+#### *Response* 
 [
   {
     "id": 1,

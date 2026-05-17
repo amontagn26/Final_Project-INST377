@@ -29,17 +29,19 @@ Ensure the following is installed on your device:
 - npm (Included with Node.js)
 - A Supabase account with a project set up
 ### Steps
-1) Clone the Repository
 
+1. Clone the repository:
+```bash
 git clone https://github.com/amontagn26/Final_Project-INST377.git
-
 cd Final_Project-INST377
+```
 
-2) Install Dependencies
-
+2. Install dependencies:
+```bash
 npm install
+```
 
-3) Create .env file in the root directory with Supabase credentials :
+3. Create a `.env` file in the root directory with your Supabase credentials:
 
 SUPABASE_URL=https://your-project-id.supabase.co
 
@@ -54,7 +56,7 @@ SUPABASE_KEY=your_service_role_key
 | show_name | text |
 | rating | float4 |
 
-IMPORTANT: Ensure RLS(Row Level Security) is disabled on the `favorites` table.
+> **Note:** Ensure RLS (Row Level Security) is disabled on the `favorites` table.
 ## How to Run
 Run the application in terminal with :
 

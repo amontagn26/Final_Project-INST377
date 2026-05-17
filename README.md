@@ -42,10 +42,10 @@ npm install
 ```
 
 3. Create a `.env` file in the root directory with your Supabase credentials:
-
+```bash
 SUPABASE_URL=https://your-project-id.supabase.co
-
 SUPABASE_KEY=your_service_role_key
+```
 
 4) Set up the Supabase database by creating a `favorites` table with the following columns:
 
@@ -59,9 +59,9 @@ SUPABASE_KEY=your_service_role_key
 > **Note:** Ensure RLS (Row Level Security) is disabled on the `favorites` table.
 ## How to Run
 Run the application in terminal with :
-
+``` bash
 node index.js
-
+```
 
 
 ## Testing
@@ -76,14 +76,17 @@ Serves the main project-page.html
 ### GET/shows/search?q={query}
 Searches TVMaze for a show by name and returns the top match
 #### *Response*
+```bash
 {
   "id": 169,
   "name": "Breaking Bad"
 }
+```
 ### GET/shows/:id
 Fetches full details for show by its TVMaze ID (Episode ratings, top episode, 
 worst episode, description)
 #### *Response*
+```bash
 {
   "id": 169,
   "name": "Breaking Bad",
@@ -94,9 +97,11 @@ worst episode, description)
   "worstEpisode": { "label": "S1E1", "name": "Pilot", "rating": 7.9 },
   "ratedEpisodes": [...]
 }
+```
 ### GET/favorites
 Retrives all saved favorite shows from Supabase database
 #### *Response*
+```bash
 [
   {
     "id": 1,
@@ -105,15 +110,19 @@ Retrives all saved favorite shows from Supabase database
     "rating": 9.2
   }
 ]
+```
 ### POST/favorites
 Saves a show to the Supabase database
 #### Request Body :
+```bash
 {
   "show_id": 169,
   "show_name": "Breaking Bad",
   "rating": 9.2
 }
+```
 #### *Response* 
+```bash
 [
   {
     "id": 1,
@@ -122,6 +131,7 @@ Saves a show to the Supabase database
     "rating": 9.2
   }
 ]
+```
 ## Bugs
 ### Known Bugs
 - The same show can be added to favorites multiple times

@@ -34,14 +34,17 @@ Ensure the following is installed on your device:
 git clone https://github.com/amontagn26/Final_Project-INST377.git
 
 cd Final_Project-INST377
+
 2) Install Dependencies
 
 npm install
+
 3) Create .env file in the root directory with Supabase credentials :
 
 SUPABASE_URL=https://your-project-id.supabase.co
 
 SUPABASE_KEY=your_service_role_key
+
 4) Set up the Supabase database by creating a `favorites` table with the following columns:
 
 | Column | Type |
@@ -62,7 +65,7 @@ node index.js
 ## Testing
 There are no automatted tests currently written for the application. Users must
  test manually:
- 1) Start the server with *node index.js*
+ 1) Start the server with `node index.js`
  2) Visit http://localhost:3000 in your browser
  3) Test each feature manually (Search for show/ add show to favorites)
 ## API Endpoints

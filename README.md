@@ -7,9 +7,10 @@ to a personal list. The app pulls live data from the TVMaze API and stores users
 favorite shows using a Supabase database. 
 
 ### Target Browsers
-This project is intended for web browsers :
+This project is intended for web browsers such as:
 - Google Chrome
 - Safari
+
 Mobile browsers are not offically supported currently. The layout is not optimized for smaller screens. 
 ## Link to Developer Manual
 [Click here to view the Developer Manual](#developer-manual)
@@ -38,13 +39,16 @@ SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_KEY=your_service_role_key
 4) Set up Supabase database by creating a *favorites* table with the following
 columns:
+
 id | int8
 show_id | int8
 show_name | text
 rating | float
+
 IMPORTANT: Ensure RLS(Row Level Security) is disabled on the *favorites* table.
 ## How to Run
 Run the application in terminal with :
+
 node index.js
 
 
@@ -53,21 +57,21 @@ node index.js
 There are no automatted tests currently written for the application. Users must
  test manually:
  1) Start the server with *node index.js*
- 2) Visit *http://localhost:3000 in your browser
+ 2) Visit http://localhost:3000 in your browser
  3) Test each feature manually (Search for show/ add show to favorites)
 ## API Endpoints
 ### GET/
 Serves the main project-page.html
 ### GET/shows/search?q={query}
 Searches TVMaze for a show by name and returns the top match
-### GET/shows/:id
-Fetches full details for show by its TVMaze ID (Episode ratings, top episode, 
-worst episode, description)
 #### Response
 {
   "id": 169,
   "name": "Breaking Bad"
 }
+### GET/shows/:id
+Fetches full details for show by its TVMaze ID (Episode ratings, top episode, 
+worst episode, description)
 #### Response
 {
   "id": 169,
